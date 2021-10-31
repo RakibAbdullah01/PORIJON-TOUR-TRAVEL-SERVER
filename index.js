@@ -21,7 +21,14 @@ async function run(){
         const porijanDb = client.db("porijanDb");
         const pakageCollection = porijanDb.collection("pakages");
         const OrderCollection = porijanDb.collection("orders");
+        const galleryData = porijanDb.collection("galleryData");
 
+        // Get ALl Fallery Data
+        app.get("/gallerydata",async(req,res)=>{
+          const result = await galleryData.find({}).toArray();
+          res.send(result)
+          console.log("All Booking Send Successfully");
+        })
         // Add Order
         app.post('/addorder',async(req,res)=>{
           const result = await OrderCollection.insertOne(req.body);
@@ -45,7 +52,7 @@ async function run(){
           console.log("My myBookings Send Successfully",result);
         });
 
-        // Get My myBookings
+        // Delete myBookings
         app.delete("/myBooking/:id", async (req, res) => {
           const result = await OrderCollection.deleteOne({_id:ObjectId(req.params.id)})
           res.send(result);
@@ -91,9 +98,10 @@ async function run(){
         // Get One Package
         app.get('/package/:id',async(req,res)=>{
           const query = {_id:ObjectId(req.params.id)}
+          console.log(query);
           const result = await pakageCollection.findOne(query);
             res.send(result);
-            console.log("One Package send Successfully"); 
+            console.log("One Package send Successfully",result); 
         }) 
 
         // get search Pakage
@@ -118,5 +126,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`App Listen at http://localhost:${port}`)
 })
